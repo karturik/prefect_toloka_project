@@ -1,0 +1,66 @@
+{
+    "assignments_automerge_enabled": false,
+    "assignments_issuing_type": "AUTOMATED",
+    "owner": {
+        "id": "81028629498cb2d4c5a92492b4b9016b",
+        "myself": true
+    },
+    "public_description": "Необходимо проверить фотографию и видео на соответствие инструкции.",
+    "public_instructions": "<div style=\"text-align:justify\"><div>Приветствуем, в этом задании вам нужно будет проверить, соответствуют ли правилам из инструкции фото и короткое видео.<br /></div><div style=\"text-align:center\"><br /></div><div>Требования к файлам:</div><div><ul><li>На фотографии и видео не должно быть размытости.</li><li>На видео должны быть повороты головы влево-вправо, а так же вверх-вниз</li><li>Фото и видео должны быть сделаны в хорошо освещенном месте.</li><li>Лицо должно быть в фокусе, чётко видно и ничем не закрыто</li><li><span style=\"font-weight:700\"><font color=\"#ff003f\">Лицо должно быть видно целиком, никакая его часть не должна быть обрезана</font></span></li><li>Лицо должно оставаться видимым на протяжении всего видео</li><li>На лице не должно быть маски, тёмных очков, и любых других приедметов</li><li>Длина видео от 3 до 15 секунд.</li></ul><div>Пример видео: <img alt=\"\" src=\"https://ibb.co/C7sbPWd\" /><a href=\"https://storage.yandexcloud.net/facevideo/video_face.mp4\" target=\"_blank\" style=\"background-color:rgb( 255 , 255 , 254 );outline:0px;font-family:&#39;consolas&#39; , &#39;courier new&#39; , monospace;font-size:14px;white-space:pre\" rel=\"nofollow noopener noreferrer\">https://storage.yandexcloud.net/facevideo/video_face.mp4</a></div></div></div>",
+    "public_name": "Проверка фото и видео",
+    "task_spec": {
+        "input_spec": {
+            "assignment_id": {
+                "hidden": false,
+                "required": true,
+                "type": "string"
+            },
+            "phone_": {
+                "hidden": false,
+                "required": true,
+                "type": "string"
+            },
+            "photo_url": {
+                "hidden": false,
+                "required": true,
+                "type": "url"
+            },
+            "video_url": {
+                "hidden": false,
+                "required": true,
+                "type": "url"
+            }
+        },
+        "output_spec": {
+            "is_ok": {
+                "hidden": false,
+                "required": true,
+                "type": "boolean"
+            }
+        },
+        "view_spec": {
+            "assets": {
+                "script_urls": [
+                    "$TOLOKA_ASSETS/js/toloka-handlebars-templates.js"
+                ],
+                "style_urls": []
+            },
+            "markup": "{{#if reviewMode}}\n    <div class=\"flex reviewFlex\">\n        <img src=\"https://toloka.yandex.ru/api/v1/attachments/{{photo}}/download\"></img>\n        <div class=\"video\">\n            <video src=\"https://toloka.yandex.ru/api/v1/attachments/{{videoId}}/download\" muted\n             controls autoplay preload=\"auto\" id='video1'></video>\n        </div>\n            {{field type=\"input\" name=\"phone_\"}}\n    </div>\n{{else}}\n\n<br>\n\n        \n    <div class=\"outline\">\n         \n        \n       \n        \n        Модель устройства исполнителя:<br>{{phone_}}\n    </div>\n\n    <div class=\"outline\">\n        <font size=\"5\" color=\"red\" face=\"Arial\">Фото: </font>\n        <br>\n        {{img src = photo_url width=\"60%\" height=\"60%\"}}\n        <br>\n    </div>\n    \n\n\n    <div class=\"outline\">\n        <font size=\"5\" color=\"red\" face=\"Arial\">Видео: </font>\n        <br>\n        <div class=\"video\">\n            <video src=\"{{video_url}}\" \n            controls autoplay preload=\"auto\" id='video1' width=\"100%\" height=\"100%\"></video>\n        </div>\n        <br> \n    </div>\nМожно ли сказать, что и фото и видео сняты по инструкции?\n    {{field type= \"radio\" name=\"is_ok\" value = true label=\"да\" hotkey=\"1\"}}\n    {{field type=\"radio\" name=\"is_ok\" value = false label=\"нет\" hotkey=\"2\"}}\n{{/if}}",
+            "script": "exports.Task = extend(TolokaHandlebarsTask, function (options) {\n\tTolokaHandlebarsTask.call(this, options);\n}, {\n\tgetTemplateData: function () {\n\t\tconst data = TolokaHandlebarsTask.prototype.getTemplateData.call(this);\n\n\t\tif (this.getWorkspaceOptions().isReadOnly) {\n\t\t\tthis.isReadOnly = true;\n\t\t}\n\t\tif (this.getWorkspaceOptions().isReviewMode) {\n\t\t\tthis.isReviewMode = true;\n\t\t}\n\n\t\tdata.reviewMode = this.isReviewMode;\n\t\tdata.videoId = this.getSolution().output_values.result;\n\t\tdata.photo = this.getSolution().output_values.photo;\n\t\tdata.AssignmentId  = this.getAssignment().getId();\n\t\treturn data;\n\t},\n\tonRender: function() {\n\t\tvar video = this.getDOMElement().querySelector(\"video\");\n\t\tif (this.getWorkspaceOptions().isReadOnly) {\n\t\t\tconsole.log('ffdfsf')\n\t\t\tvideo.playbackRate = 2;\n\t\t\tvideo.addEventListener(\"play\", function(e) {\n\t\t\t\tthis.videoPlayed = true;\n\t\t\t}.bind(this));\n\t\t}\n\n\t}\n\n\t\n\t\n});\n\nfunction extend(ParentClass, constructorFunction, prototypeHash) {\n\tconstructorFunction = constructorFunction || function () {};\n\tprototypeHash = prototypeHash || {};\n\n\tif (ParentClass) {\n\t\tconstructorFunction.prototype = Object.create(ParentClass.prototype);\n\t}\n\tfor (var i in prototypeHash) {\n\t\tconstructorFunction.prototype[i] = prototypeHash[i];\n\t}\n\treturn constructorFunction;\n}",
+            "settings": {
+                "permissions": [],
+                "showFinish": true,
+                "showFullscreen": true,
+                "showInstructions": true,
+                "showMessage": true,
+                "showReward": true,
+                "showSkip": true,
+                "showSubmit": true,
+                "showTimer": true,
+                "showTitle": true
+            },
+            "styles": "video {\n\tdisplay: block;\n\theight: 80%\n}\n\n.task {\n\twidth: 100%;\n}\n.outline {\n  border: 3px solid rgb(255,0,0);\n  border-radius: 25px;\n  padding: 10px; \n  margin: 10px 0;\n   }\n\n\n/* Режим модерации */\n.flex video {\n\theight: 100%;\n\tmax-width: 60vw;\n}\n.flex {\n\tdisplay: flex;\n\theight: 90vh;\n\tjustify-content: space-around;\n}\n.flex .photo {\n\theight: 100%;\n\tdisplay: flex;\n\talign-items: center;\n}\n",
+            "type": "classic"
+        }
+    }
+}

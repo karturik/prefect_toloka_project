@@ -1,0 +1,80 @@
+{
+    "project_id": "",
+    "private_comment": "Первая попытка создать пул в проекте Проверка фото и видео",
+    "public_description": "Проверка фото и видео",
+    "will_expire": "2024-09-01T13:00",
+    "assignment_max_duration_seconds": 600,
+    "assignments_issuing_config": {
+        "issue_task_suites_in_creation_order": false
+    },
+    "auto_accept_period_day": 21,
+    "auto_accept_solutions": true,
+    "auto_close_after_complete_delay_seconds": 0,
+    "defaults": {
+        "default_overlap_for_new_task_suites": 3
+    },
+    "filter": {
+        "and": [
+            {
+                "or": [
+                    {
+                        "category": "profile",
+                        "key": "languages",
+                        "operator": "IN",
+                        "value": "RU"
+                    }
+                ]
+            }
+        ]
+    },
+    "last_close_reason": "COMPLETED",
+    "may_contain_adult_content": true,
+    "metadata": {},
+    "mixer_config": {
+        "force_last_assignment": true,
+        "golden_tasks_count": 0,
+        "real_tasks_count": 1,
+        "training_tasks_count": 0
+    },
+    "priority": 0,
+    "private_name": "Проверка фото и видео",
+    "quality_control": {
+        "configs": [
+            {
+                "collector_config": {
+                    "parameters": {
+                        "fast_submit_threshold_seconds": 15,
+                        "history_size": 5
+                    },
+                    "type": "ASSIGNMENT_SUBMIT_TIME",
+                    "uuid": "2ec3ebd0-475d-4800-b359-7f7ff8e91aa3"
+                },
+                "rules": [
+                    {
+                        "action": {
+                            "parameters": {
+                                "duration": 1,
+                                "duration_unit": "DAYS",
+                                "scope": "PROJECT"
+                            },
+                            "type": "RESTRICTION_V2"
+                        },
+                        "conditions": [
+                            {
+                                "key": "fast_submitted_count",
+                                "operator": "GTE",
+                                "value": 4
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "reward_per_assignment": 0.01,
+    "speed_quality_balance": {
+        "percent": 90,
+        "type": "TOP_PERCENTAGE_BY_QUALITY"
+    },
+    "type": "REGULAR"
+}

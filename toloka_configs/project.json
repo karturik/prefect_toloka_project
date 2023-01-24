@@ -1,0 +1,62 @@
+{
+    "assignments_automerge_enabled": false,
+    "assignments_issuing_type": "AUTOMATED",
+    "owner": {
+        "id": "81028629498cb2d4c5a92492b4b9016b",
+        "myself": true
+    },
+    "public_description": "Вам надо будет сделать фото и видео",
+    "public_instructions": "<div style=\"text-align:justify\"><div>Hello!</div><div>We are training a neural network to find faces in a video. For training, we need to collect a lot of videos with people. Help us with this project!</div></div><div style=\"text-align:center\"><br /></div><div>Requirements:</div><div><ul><li>Your face must be clearly visible in the photo and video.</li><li>Face should occupy more than 70% of the photo. </li><li>Photos and videos must be taken in a well-lit area.</li><li>The face must be completely in the frame.</li><li>Photo and video must be taken personally by you.</li><li>Covering the eyes with opaque objects (sunglasses) is not allowed.</li><li>Video must be longer than 3 seconds, max 15 seconds.</li></ul><h3><font color=\"#ff1f1f\"><span style=\"font-weight:700\">Selfie example.</span></font></h3><ul><li><img src=\"https://storage.yandexcloud.net/ch227/example.jpg\" alt=\"\" /><br /></li></ul><div></div><div><span style=\"font-weight:700\">What should be done with video:</span><br /></div><div><div style=\"text-align:justify\"><ol><li>Take a short selfie video (3 to 15 seconds)</li><li>The video should be filmed turning the head <span style=\"font-weight:700\">left-right</span> and <span style=\"font-weight:700\">up-down</span><br /></li><li>Face must be in focus, clearly visible, and unobstructed</li><li>The face must be <span style=\"font-weight:700\">completely in the frame</span>, not cropped!  <font color=\"#ff1f1f\"><span style=\"font-weight:700\">ATTENTION!</span></font><br /></li><li><font color=\"#ff0000\">Even <span style=\"font-weight:700\">when turning the head left and right</span>, the<span style=\"font-weight:700\"> face should be completely included in the frame</span>.</font></li><li><font color=\"#ff0000\">There must be no mask or other objects on the face that obstruct the face</font></li></ol></div></div><h3><span style=\"font-weight:700\"><font color=\"#ff0000\">Video example:</font></span></h3></div><div><div style=\"color:rgb( 0 , 0 , 0 );background-color:rgb( 255 , 255 , 254 );font-family:&#39;consolas&#39; , &#39;courier new&#39; , monospace;font-size:14px;line-height:19px;white-space:pre\"><span style=\"color:rgb( 4 , 81 , 165 )\"><a href=\"https://storage.yandexcloud.net/facevideo/video_face.mp4\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">https://storage.yandexcloud.net/facevideo/video_face.mp4</a></span></div></div>",
+    "public_name": "Фото и видео",
+    "task_spec": {
+        "input_spec": {
+            "img_url": {
+                "hidden": false,
+                "required": true,
+                "type": "url"
+            }
+        },
+        "output_spec": {
+            "phone_": {
+                "hidden": false,
+                "min_length": 1,
+                "required": true,
+                "type": "string"
+            },
+            "photo_": {
+                "hidden": false,
+                "required": true,
+                "type": "file"
+            },
+            "video_": {
+                "hidden": false,
+                "required": true,
+                "type": "file"
+            }
+        },
+        "view_spec": {
+            "assets": {
+                "script_urls": [
+                    "$TOLOKA_ASSETS/js/toloka-handlebars-templates.js"
+                ],
+                "style_urls": []
+            },
+            "markup": "{{#if reviewMode}}\n    <div class=\"flex reviewFlex\">\n        <img src=\"https://toloka.yandex.ru/api/v1/attachments/{{photo_}}/download\"></img>\n        <div class=\"video\">\n            <video src=\"https://toloka.yandex.ru/api/v1/attachments/{{video_}}/download\" muted\n             controls autoplay preload=\"auto\" id='video1'></video>\n        </div>\n            {{field type=\"input\" name=\"phone_\"}}\n    </div>\n{{else}}\n    <div class=\"outline\">\n        <font size=\"5\" color=\"red\" face=\"Arial\">STEP 1 </font>\n        <br>\n        <br>\n        Write your phone model\n        <br>\n        <br>\n        Model your phone:\n        <br>\n        {{field type=\"input\" name=\"phone_\" width=\"100%\"}}\n        <br>\n    </div>\n\n    <div class=\"outline\">\n        <font size=\"5\" color=\"red\" face=\"Arial\">STEP 2 </font>\n        <br>\n        <br>\n        Upload your selfie. Please be sure to read the instructions carefully!\n        {{field type=\"file-img\" name=\"photo_\" sources=\"CAMERA\" fileType=\"IMAGE\" camera=true compress=false label=\"Upload selfie\"}}\n        <br>\n    </div>\n\n    <div class=\"outline\">\n        <font size=\"5\" color=\"red\" face=\"Arial\">STEP 3 </font>\n        <br>\n        <br>\n        Take a video selfie\n        <br>\n        <br>\n         <font size=\"5\" color=\"green\" face=\"Arial\">MOVE YOUR HEAD LEFT, RIGHT, UP AND DOWN. MUST BE MORE THAN 5 SEC. </font>\n        <b></b>\n        <br>\n        <br>\n        <font size=\"5\" color=\"red\" face=\"Arial\">VIDEO EXAMPLE </font>\n        <br>\n        <img src=\"https://storage.yandexcloud.net/yuri.test/ezgif.com-gif-maker%20(2).gif\" width=\"80%\" alt=\"\">\n        <br>\n        <br>\n        {{field type=\"file\" name=\"video_\" label=\"Upload video\" fileType=\"VIDEO\" sources=\"CAMERA\"}}\n    </div>\n{{/if}}",
+            "script": "exports.Task = extend(TolokaHandlebarsTask, function (options) {\n\tTolokaHandlebarsTask.call(this, options);\n}, {\n\tgetTemplateData: function () {\n\t\tconst data = TolokaHandlebarsTask.prototype.getTemplateData.call(this);\n\n\t\tif (this.getWorkspaceOptions().isReadOnly) {\n\t\t\tthis.isReadOnly = true;\n\t\t}\n\t\tif (this.getWorkspaceOptions().isReviewMode) {\n\t\t\tthis.isReviewMode = true;\n\t\t}\n\n\t\tdata.reviewMode = this.isReviewMode;\n\t\tdata.video_ = this.getSolution().output_values.video_;\n\t\tdata.photo_ = this.getSolution().output_values.photo_;\n\t\tdata.AssignmentId  = this.getAssignment().getId();\n\t\treturn data;\n\t},\n\tonRender: function() {\n\t\tvar video = this.getDOMElement().querySelector(\"video\");\n\t\tif (this.getWorkspaceOptions().isReadOnly) {\n\t\t\tconsole.log('ffdfsf')\n\t\t\tvideo.playbackRate = 2;\n\t\t\tvideo.addEventListener(\"play\", function(e) {\n\t\t\t\tthis.videoPlayed = true;\n\t\t\t}.bind(this));\n\t\t}\n\n\t}\n\n\t\n\t\n});\n\nfunction extend(ParentClass, constructorFunction, prototypeHash) {\n\tconstructorFunction = constructorFunction || function () {};\n\tprototypeHash = prototypeHash || {};\n\n\tif (ParentClass) {\n\t\tconstructorFunction.prototype = Object.create(ParentClass.prototype);\n\t}\n\tfor (var i in prototypeHash) {\n\t\tconstructorFunction.prototype[i] = prototypeHash[i];\n\t}\n\treturn constructorFunction;\n}\n",
+            "settings": {
+                "permissions": [],
+                "showFinish": true,
+                "showFullscreen": true,
+                "showInstructions": true,
+                "showMessage": true,
+                "showReward": true,
+                "showSkip": true,
+                "showSubmit": true,
+                "showTimer": true,
+                "showTitle": true
+            },
+            "styles": "video {\n\tdisplay: block;\n\theight: 80%\n}\n\n.task {\n\twidth: 100%;\n}\n.outline {\n  border: 3px solid rgb(255,0,0);\n  border-radius: 25px;\n  padding: 10px; \n  margin: 10px 0;\n   }\n\n\n/* Режим модерации */\n.flex video {\n\theight: 100%;\n\tmax-width: 60vw;\n}\n.flex {\n\tdisplay: flex;\n\theight: 90vh;\n\tjustify-content: space-around;\n}\n.flex .photo {\n\theight: 100%;\n\tdisplay: flex;\n\talign-items: center;\n}\n",
+            "type": "classic"
+        }
+    }
+}
